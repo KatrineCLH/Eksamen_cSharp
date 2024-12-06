@@ -8,29 +8,23 @@ namespace DAL.Mappers
 {
     public class TidsregistreringMapper
     {
+        /// <summary>
+        /// Den angivne Tidsregistrering må ikke være null. Den tilknyttede medarbejder og sag skal findes i databasen.
+        /// Returnerer den angivne tidsregistrering som DAL-objekt.
+        /// </summary>
         public static Model.Tidsregistrering MapToDAL(DTO.Model.Tidsregistrering t)
         {
-            Model.Medarbejder dalMedarbejder = MedarbejderMapper.MapToDAL(t.Medarbejder);
-            Model.Sag dalSag = SagMapper.MapToDAL(t.Sag);
-            return new Model.Tidsregistrering(t.Id, t.Start, t.Slut, dalMedarbejder, dalSag);
+            return new Model.Tidsregistrering(t.Start, t.Slut, t.Medarbejder.Initial, t.Sag.Nummer);
         }
-        public static List<DTO.Model.Tidsregistrering> MapListToDTO(List<Model.Tidsregistrering> tidsregistreringer)
+
+        /// <summary>
+        /// Den angivne tidsregistrering, medarbejder og sag må ikke være null. 
+        /// Medarbejder og sag skal være korrekt.
+        /// Den angivne tidsregistrering returneres som DTO-objekt med korrekt sat medarbejder og sag.
+        /// </summary>
+        public static DTO.Model.Tidsregistrering MapToDTO(Model.Tidsregistrering t, DTO.Model.Medarbejder medarbejder, DTO.Model.Sag sag)
         {
-            if(tidsregistreringer != null && tidsregistreringer.Count > 0)
-            {
-                List<DTO.Model.Tidsregistrering> dtoTidsregistreringer = new List<DTO.Model.Tidsregistrering>();
-                foreach(Model.Tidsregistrering t in tidsregistreringer){
-                    dtoTidsregistreringer.Add(MapToDTO(t));
-                }
-                return dtoTidsregistreringer;
-            }
-            return null;
-        }
-        public static DTO.Model.Tidsregistrering MapToDTO(Model.Tidsregistrering t)
-        {
-            DTO.Model.Medarbejder dtoMedarbejder = MedarbejderMapper.MapToDTO(t.Medarbejder);
-            DTO.Model.Sag dtoSag = SagMapper.MapToDTO(t.Sag);
-            return new DTO.Model.Tidsregistrering(t.Id, t.Start, t.Slut, dtoMedarbejder, dtoSag);
+            return new DTO.Model.Tidsregistrering(t.Id, t.Start, t.Slut, medarbejder, sag);
         }
     }
 }

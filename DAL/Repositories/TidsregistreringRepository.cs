@@ -12,38 +12,55 @@ namespace DAL.Repositories
 {
     public class TidsregistreringRepository
     {
+        /// <summary>
+        /// Den angivne tidsregistrering må ikke være null.
+        /// Hvis den angivne tidsregistrerings medarbejder og sag findes i databasen og tilføjes korrekt, 
+        /// returneres tidsregistreringens ID. Ellers returneres -1.
+        /// </summary>
         public static int AddTidsregistrering(DTO.Model.Tidsregistrering t)
         {
             using (FirmaContext context = new FirmaContext())
             {
-                Medarbejder dalMedarbejder = context.Medarbejders.Find(t.Medarbejder.Initial);
-                Sag dalSag = context.Sags.Find(t.Sag.Nummer);
-                Tidsregistrering dalTidsregistrering = TidsregistreringMapper.MapToDAL(t);
-                dalTidsregistrering.Medarbejder = dalMedarbejder;
-                dalTidsregistrering.Sag = dalSag;
-                context.Tidsregistrerings.Add(dalTidsregistrering);
-                context.SaveChanges();
-                return dalTidsregistrering.Id;
+                DTO.Model.Medarbejder dtoMedarbejder = MedarbejderRepository.GetMedarbejder(t.Medarbejder.Initial);
+                DTO.Model.Sag dtoSag = SagRepository.GetSag(t.Sag.Nummer);
+                if (dtoMedarbejder != null && dtoSag != null)
+                {
+                    Tidsregistrering dalTidsregistrering = TidsregistreringMapper.MapToDAL(t);
+                    context.Tidsregistrerings.Add(dalTidsregistrering);
+                    context.SaveChanges();
+                    return dalTidsregistrering.Id;
+                }
+                return -1;
             }
         }
-        public static List<DTO.Model.Tidsregistrering> GetAlleTidsregistreringerForID(string initialer)
+
+        /// <summary>
+        /// Hvis der findes korrekte tidsregistreringer for medarbejderen med de angivne initialer, 
+        /// så returneres en liste af dem som DTO-objekter 
+        /// ordnet stigende efter Start-dato. Ellers returneres en tom liste.
+        /// </summary>
+        public static List<DTO.Model.Tidsregistrering> GetAlleTidsregistreringerForMedarbejder(string initialer)
         {
             using (FirmaContext context = new FirmaContext())
-            {   
-                //hiv alle medarbejderens tider op fra db
-                List<Model.Tidsregistrering> dalTidsregistreringer = context.Tidsregistrerings.Where(t => t.MedarbejderInitial == initialer).OrderBy(x => x.Start).ToList();
-                //find den rigtige medarbejder
-                Model.Medarbejder dalMedarbejder = context.Medarbejders.Find(initialer);
-                //knyt alle de rigtige sager og den rigtige medarbejder på
-                foreach (Model.Tidsregistrering t in dalTidsregistreringer)
+            {
+                List<DTO.Model.Tidsregistrering> dtoTidsregistreringer = new List<DTO.Model.Tidsregistrering>();
+                DTO.Model.Medarbejder dtoMedarbjeder = MedarbejderRepository.GetMedarbejder(initialer);
+                if (dtoMedarbjeder != null)
                 {
-                    Model.Sag dalSag = context.Sags.Find(t.SagsNummer);
-                    t.Sag = dalSag;
-                    t.Medarbejder = dalMedarbejder;
+                    List<Model.Tidsregistrering> dalTidsregistreringer = context.Tidsregistrerings.Where(t => t.MedarbejderInitial == initialer).OrderBy(x => x.Start).ToList();                   
+                    if (dalTidsregistreringer.Count > 0)
+                    {
+                        foreach (Model.Tidsregistrering tr in dalTidsregistreringer)
+                        {
+                            DTO.Model.Sag dtoSag = SagRepository.GetSag(tr.SagsNummer);
+                            if (dtoSag != null)
+                            {
+                                DTO.Model.Tidsregistrering dtoTidsregistrering = TidsregistreringMapper.MapToDTO(tr, dtoMedarbjeder, dtoSag);
+                                dtoTidsregistreringer.Add(dtoTidsregistrering);
+                            }
+                        }
+                    }
                 }
-                
-                List<DTO.Model.Tidsregistrering> dtoTidsregistreringer = TidsregistreringMapper.MapListToDTO(dalTidsregistreringer);
-
                 return dtoTidsregistreringer;
             }
         }

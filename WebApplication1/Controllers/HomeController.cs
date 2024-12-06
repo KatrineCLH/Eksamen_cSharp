@@ -25,12 +25,12 @@ namespace WebApplication1.Controllers
             if (MedarbejderDD != null)
             {
                 Medarbejder medarbejder = medarbejderBLL.GetMedarbejder(MedarbejderDD);
-                return View("RegisterView", medarbejder);
+                if (medarbejder != null)
+                {
+                    return View("RegisterView", medarbejder);
+                }
             }
-            else
-            {
-                return View("ErrorView");
-            } 
+            return View("ErrorView");
         }
         public ActionResult AddTidsregistrering(string SagDD, DateTime Start, DateTime Slut, Medarbejder medarbejder)
         {
@@ -38,11 +38,15 @@ namespace WebApplication1.Controllers
             {
                 int sagsnummer = Int32.Parse(SagDD);
                 Sag sag = sagBLL.GetSag(sagsnummer);
-
-                Tidsregistrering tidsregistrering = new Tidsregistrering(0, Start, Slut, medarbejder, sag);
-                tidsregistreringBLL.AddTidsregistrering(tidsregistrering);
-
-                return RedirectToAction("Index");
+                if (sag != null)
+                {
+                    Tidsregistrering tidsregistrering = new Tidsregistrering(0, Start, Slut, medarbejder, sag);
+                    int result = tidsregistreringBLL.AddTidsregistrering(tidsregistrering);
+                    if (result != -1)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
             }
             return View("ErrorView");
         }
@@ -55,30 +59,32 @@ namespace WebApplication1.Controllers
         public ActionResult ShowSagDD(int afdelingsNummer)
         {
             ViewBag.DDTitle = "SagDD";
-            List<Sag> sager = sagBLL.GetSagerForAfdeling(afdelingsNummer);
-
             List<SelectListItem> ddList = new List<SelectListItem>();
-            foreach (Sag sag in sager)
+
+            List<Sag> sager = sagBLL.GetSagerForAfdeling(afdelingsNummer);
+            if (sager != null)
             {
-                ddList.Add(new SelectListItem { Text = sag.ToString(), Value = sag.Nummer.ToString() });
+                foreach (Sag sag in sager)
+                {
+                    ddList.Add(new SelectListItem { Text = sag.ToString(), Value = sag.Nummer.ToString() });
+                }
             }
+
             return ShowDD(ddList);
         }
         [ChildActionOnly]
         public ActionResult ShowMedarbejderDD()
         {
             ViewBag.DDTitle = "MedarbejderDD";
-          
+
             List<Medarbejder> medarbejdere = medarbejderBLL.GetAllMedarbejdere();
             List<SelectListItem> ddList = new List<SelectListItem>();
 
-            if (medarbejdere != null)
+            foreach (Medarbejder m in medarbejdere)
             {
-                foreach (Medarbejder m in medarbejdere)
-                {
-                    ddList.Add(new SelectListItem { Text = m.ToString(), Value = m.Initial });
-                }
+                ddList.Add(new SelectListItem { Text = m.ToString(), Value = m.Initial });
             }
+
             return ShowDD(ddList);
         }
     }

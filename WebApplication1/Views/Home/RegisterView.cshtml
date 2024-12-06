@@ -15,15 +15,13 @@
         <br />
         <label>Start</label>
         <br />
-        <input type="datetime-local" name="Start"/>
+        <input type="datetime-local" name="Start" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
         <br />
         <label>Slut</label>
         <br />
-        <input type="datetime-local" name="Slut"/>
+        <input type="datetime-local" name="Slut" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")"/>
         <br />
         <button type="submit">Registrer</button>
-        <br />
-        <label class="succesLabel">@ViewBag.Succes</label>
     }
 </div>
 

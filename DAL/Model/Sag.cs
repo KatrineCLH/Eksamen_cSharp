@@ -18,12 +18,11 @@ namespace DAL.Model
         public int AfdelingsNummer { get; set; }
         public Afdeling Afdeling { get; set; }
         public Sag() { }
-        public Sag(int nummer, string overskrift, string beskrivelse, Afdeling afdeling)
+        public Sag(string overskrift, string beskrivelse, int afdelingsNummer)
         {
-            Nummer = nummer;
             Overskrift = overskrift;
             Beskrivelse = beskrivelse;
-            Afdeling = afdeling;
+            AfdelingsNummer = afdelingsNummer;
         }
     }
 }

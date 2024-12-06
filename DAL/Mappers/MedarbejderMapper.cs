@@ -9,38 +9,25 @@ namespace DAL.Mappers
 {
     public class MedarbejderMapper
     {
+        /// <summary>
+        /// Medarbejder må ikke være null.
+        /// Returnerer den angivne medarbejder som DAL-objekt.
+        /// </summary>
         public static Model.Medarbejder MapToDAL(DTO.Model.Medarbejder medarbejder)
         {
-            if (medarbejder != null)
-            {
-                Model.Afdeling dalAfdeling = AfdelingMapper.MapToDAL(medarbejder.Afdeling);
-                Model.Medarbejder dalMedarbejder = new Model.Medarbejder(medarbejder.Initial, medarbejder.Cpr, medarbejder.Navn, dalAfdeling);
-                return dalMedarbejder;
-            }
-            return null;
+            Model.Medarbejder dalMedarbejder = new Model.Medarbejder(medarbejder.Initial, medarbejder.Cpr, medarbejder.Navn, medarbejder.Afdeling.AfdelingsNummer);
+            return dalMedarbejder;
         }
-        public static DTO.Model.Medarbejder MapToDTO(Model.Medarbejder medarbejder)
+
+        /// <summary>
+        /// En medarbejder må ikke være null. Afdeling må ikke være null og skal være korrekt.
+        /// Returnerer den angivne medarbejders returneres som DTO-objekt.
+        /// </summary>
+        public static DTO.Model.Medarbejder MapToDTO(Model.Medarbejder medarbejder, Model.Afdeling afdeling)
         {
-            if(medarbejder != null)
-            {
-                DTO.Model.Afdeling dtoAfdeling = AfdelingMapper.MapToDTO(AfdelingRepository.GetAfdeling(medarbejder.AfdelingsNummer));
-                DTO.Model.Medarbejder dtoMedarbejder = new DTO.Model.Medarbejder(medarbejder.Initial, medarbejder.Cpr, medarbejder.Navn, dtoAfdeling);
-                return dtoMedarbejder;
-            }
-            return null;
-        }
-        public static List<DTO.Model.Medarbejder> MapToDTOList(List<Model.Medarbejder> medarbejdere)
-        {
-            if(medarbejdere != null && medarbejdere.Count > 0)
-            {
-                List<DTO.Model.Medarbejder> dtoMedarbejdere = new List<DTO.Model.Medarbejder>();
-                foreach(Model.Medarbejder m in medarbejdere)
-                {
-                    dtoMedarbejdere.Add(MapToDTO(m));
-                }
-                return dtoMedarbejdere;
-            }
-            return null;
+            DTO.Model.Afdeling dtoAfdeling = AfdelingMapper.MapToDTO(afdeling);
+            DTO.Model.Medarbejder dtoMedarbejder = new DTO.Model.Medarbejder(medarbejder.Initial, medarbejder.Cpr, medarbejder.Navn, dtoAfdeling);
+            return dtoMedarbejder;
         }
     }
 }

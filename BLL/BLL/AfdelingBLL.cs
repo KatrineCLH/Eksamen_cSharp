@@ -12,6 +12,8 @@ namespace BLL.BLL
     public class AfdelingBLL
     {
         public AfdelingBLL() { }
+
+        /// <summary>Hvis der er afdelinger i Databasen, returneres de som DTO-objekter. Ellers returneres null.</summary>
         public List<Afdeling> GetAllAfdelinger()
         {
             return AfdelingRepository.GetAllAfdelinger();

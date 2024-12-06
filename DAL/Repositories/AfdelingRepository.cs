@@ -10,21 +10,36 @@ namespace DAL.Repositories
 {
     public class AfdelingRepository
     {
-        //Jeg skal bruge afdelingerne direkte fra DB
-        public static Model.Afdeling GetAfdeling(int nummer)
+        /// <summary>
+        /// Hvis der findes en afdeling i Databasen med det angivne nummer, returneres den som DAL-objekt. Ellers returneres null.
+        /// </summary>
+        public static Model.Afdeling GetAfdeling(int afdelingsNummer)
         {
             using (FirmaContext context = new FirmaContext())
             {
-                return context.Afdelings.Find(nummer);
+                Model.Afdeling afdeling = context.Afdelings.Find(afdelingsNummer);
+                if (afdeling != null) 
+                {
+                    return afdeling;
+                }
+                return null;
             }
         }
+
+        /// <summary>
+        /// Returnerer alle afdelinger i Databasen, transformeret til DTO-objekter. Hvis der ingen er, returneres null
+        /// </summary>
         public static List<DTO.Model.Afdeling> GetAllAfdelinger()
         {
             using (FirmaContext context = new FirmaContext())
             {
-                List<Model.Afdeling> dalAfdelinger = context.Afdelings.Select(a => a).ToList();
-                List<DTO.Model.Afdeling> dtoAfdelinger = AfdelingMapper.MapListToDTO(dalAfdelinger);
-                return dtoAfdelinger;
+                List<Model.Afdeling> dalAfdelinger = context.Afdelings.ToList();
+                if (dalAfdelinger.Count > 0)
+                {
+                    List<DTO.Model.Afdeling> dtoAfdelinger = AfdelingMapper.MapListToDTO(dalAfdelinger);
+                    return dtoAfdelinger;
+                }
+                return null;
             }
         }
     }

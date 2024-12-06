@@ -18,12 +18,12 @@ namespace DAL.Model
         public int AfdelingsNummer {  get; set; }
         public Afdeling Afdeling { get; set; }
         public Medarbejder() { }
-        public Medarbejder(string initial, string cpr, string navn, Afdeling afdeling)
+        public Medarbejder(string initial, string cpr, string navn, int afdelingsNummer)
         {
             Initial = initial;
-            Cpr = cpr;
+            Cpr = cpr.ToUpper();
             Navn = navn;
-            Afdeling = afdeling;
+            AfdelingsNummer = afdelingsNummer;
         }
     }
 }

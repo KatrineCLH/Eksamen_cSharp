@@ -9,38 +9,42 @@ namespace DAL.Mappers
 {
     public class SagMapper
     {
+        /// <summary>
+        /// Sag må ikke være null.
+        /// Returnerer den angivne DTO-sag som DAL-sag.
+        /// </summary>
         public static Model.Sag MapToDAL(DTO.Model.Sag sag)
         {
-            if (sag != null)
-            {
-                Model.Afdeling dalAfdeling = AfdelingMapper.MapToDAL(sag.Afdeling);
-                Model.Sag dalSag = new Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, dalAfdeling);
-                return dalSag;
-            }
-            return null;
+            Model.Sag dalSag = new Model.Sag(sag.Overskrift, sag.Beskrivelse, sag.Afdeling.AfdelingsNummer);
+            return dalSag;
         }
-        public static DTO.Model.Sag MapToDTO(Model.Sag sag)
+
+        /// <summary>
+        /// Sag må ikke være null. Afdeling må ikke være null og skal være korrekt.
+        /// Den angivne sag returneres som DTO-objekt.
+        /// </summary>
+        public static DTO.Model.Sag MapToDTO(Model.Sag sag, Model.Afdeling afdeling)
         {
-            if (sag != null)
-            {
-                DTO.Model.Afdeling dtoAfdeling = AfdelingMapper.MapToDTO(AfdelingRepository.GetAfdeling(sag.AfdelingsNummer));
-                DTO.Model.Sag dtoSag = new DTO.Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, dtoAfdeling);
-                return dtoSag;
-            }
-            return null;
+            DTO.Model.Afdeling dtoAfdeling = AfdelingMapper.MapToDTO(afdeling);
+            DTO.Model.Sag dtoSag = new DTO.Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, dtoAfdeling);
+            return dtoSag;
         }
-        public static List<DTO.Model.Sag> MapToDTOList(List<Model.Sag> sager)
+
+        /// <summary>
+        /// Den angivne liste af sager må ikke være null eller tom. 
+        /// Sagerne skal have den samme afdeling. 
+        /// Afdeling må ikke være null og skal være korrekt.
+        /// Returnerer alle sagerne som en liste af DTO-sager.
+        /// </summary>
+        public static List<DTO.Model.Sag> MapToDTOList(List<Model.Sag> sager, Model.Afdeling afdeling)
         {
-            if (sager != null && sager.Count > 0)
+            List<DTO.Model.Sag> dtoSager = new List<DTO.Model.Sag>();
+            foreach (Model.Sag s in sager)
             {
-                List<DTO.Model.Sag> dtoSager = new List<DTO.Model.Sag>();
-                foreach (Model.Sag s in sager)
-                {
-                    dtoSager.Add(MapToDTO(s));
-                }
-                return dtoSager;
+                DTO.Model.Sag dtoSag = MapToDTO(s, afdeling);
+                dtoSager.Add(dtoSag);
             }
-            return null;
+            return dtoSager;
         }
     }
 }

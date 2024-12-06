@@ -36,37 +36,27 @@ namespace Eksamen_Katrine
 
             //Populate oversigt over medarbejdere
             List<Medarbejder> medarbejdere = medarbejderBLL.GetAllMedarbejdere();
-            if (medarbejdere != null && medarbejdere.Count > 0)
+            foreach (Medarbejder m in medarbejdere)
             {
-                foreach (Medarbejder m in medarbejdere)
-                {
-                    MedarbejderOversigtLB.Items.Add(m);
-                }
+                MedarbejderOversigtLB.Items.Add(m);
             }
 
             //Populate oversigt over sager
             List<Sag> sager = sagBLL.GetAlleSager();
-            if (sager != null && sager.Count > 0)
+            foreach (Sag s in sager)
             {
-                foreach(Sag s in sager)
-                {
-                    SagOversigtTB.Items.Add(s);
-                }
-            }
-
+                SagOversigtTB.Items.Add(s);
+            }           
 
             //Populate drop-down med afdelinger
             List<Afdeling> afdelinger = afdelingBLL.GetAllAfdelinger();
-            
-            TextForDDItem0 = afdelinger.Find(a => a.AfdelingsNummer == 1);
-            TextForDDItem1 = afdelinger.Find(a => a.AfdelingsNummer == 2);
-            TextForDDItem2 = afdelinger.Find(a => a.AfdelingsNummer == 3);
+            if (afdelinger != null)
+            {
+                TextForDDItem0 = afdelinger.Find(a => a.AfdelingsNummer == 1);
+                TextForDDItem1 = afdelinger.Find(a => a.AfdelingsNummer == 2);
+                TextForDDItem2 = afdelinger.Find(a => a.AfdelingsNummer == 3);
+            }
 
-            /*
-            DDItem0.DataContext = this;
-            DDItem1.DataContext = this;
-            DDItem2.DataContext = this;
-            */
             DataContext = this;
         }
         public Afdeling TextForDDItem0 { get; set; }
@@ -85,6 +75,7 @@ namespace Eksamen_Katrine
                 if (medarbejder.Initial == ini)
                 {
                     MedarbejderOversigtLB.Items.Add(medarbejder);
+                    ClearMedarbejderFelter();
                 }
             }
         }
@@ -95,13 +86,11 @@ namespace Eksamen_Katrine
             {
                 Sag sag = new Sag(OverskriftTB.Text, BeskrivelseTB.Text, (Afdeling)SAfdelingDD.SelectionBoxItem);
                 int succes = sagBLL.AddSag(sag);
-                if (succes > 0)
+                if (succes != -1)
                 {
                     sag.Nummer = succes;
                     SagOversigtTB.Items.Add(sag);
-                    OverskriftTB.Clear();
-                    BeskrivelseTB.Clear();
-                    SAfdelingDD.SelectedItem = null;
+                    ClearSagFelter();
                 }
             }
         }
@@ -117,14 +106,13 @@ namespace Eksamen_Katrine
                 CprTB.Text = selectedMedarbejder.Cpr;
 
                 TidsOversigtLB.Items.Clear();
+
                 List<Tidsregistrering> tr = tidsregistreringBLL.GetAlleTidsregistreringerForID(selectedMedarbejder.Initial);
-                if (tr != null && tr.Count > 0)
+                foreach (Tidsregistrering t in tr)
                 {
-                    foreach (Tidsregistrering t in tr)
-                    {
-                        TidsOversigtLB.Items.Add(t.ToString());
-                    }
+                    TidsOversigtLB.Items.Add(t.ToString());
                 }
+                
                 FilterCB.SelectedItem = TotalFilter;
             }
         }
@@ -147,16 +135,13 @@ namespace Eksamen_Katrine
                 Medarbejder selectedMedarbejder = (Medarbejder)MedarbejderOversigtLB.SelectedItem;
                 List<Tidsregistrering> tr = tidsregistreringBLL.GetAlleTidsregistreringerForID(selectedMedarbejder.Initial);
 
-                if (tr != null && tr.Count > 0)
+                if (tr.Count > 0)
                 {
                     if (FilterCB.SelectedItem == TotalFilter)
                     {
-                        if (tr != null && tr.Count > 0)
+                        foreach (Tidsregistrering t in tr)
                         {
-                            foreach (Tidsregistrering t in tr)
-                            {
-                                TidsOversigtLB.Items.Add(t.ToString());
-                            }
+                            TidsOversigtLB.Items.Add(t.ToString());
                         }
                     }
                     else if (FilterCB.SelectedItem == MånedFilter)
@@ -166,10 +151,9 @@ namespace Eksamen_Katrine
                         double monthHours = 0;
                         string dataLine;
 
-
                         foreach (Tidsregistrering t in tr)
                         {
-                            if (t.Start.Month == currentMonth)
+                            if (t.Start.Month.Equals(currentMonth) && t.Start.Year.Equals(currentYear))
                             {
                                 monthHours += (t.Slut - t.Start).TotalHours;
                             }
@@ -177,7 +161,7 @@ namespace Eksamen_Katrine
                             {
                                 dataLine = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(currentMonth) + " " + currentYear + ": " + $"{monthHours:F2}" + " timer i alt";
                                 TidsOversigtLB.Items.Add(dataLine);
-                                monthHours = 0;
+                                monthHours = (t.Slut - t.Start).TotalHours;
                                 currentMonth = t.Start.Month;
                                 currentYear = t.Start.Year;
                             }
@@ -185,7 +169,6 @@ namespace Eksamen_Katrine
                         dataLine = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(currentMonth) + " " + currentYear + ": " + $"{monthHours:F2}" + " timer i alt";
                         TidsOversigtLB.Items.Add(dataLine);
                     }
-
                     else if (FilterCB.SelectedItem == UgeFilter)
                     {
                         int ugeCounter = 0;
@@ -199,8 +182,7 @@ namespace Eksamen_Katrine
                         TidsOversigtLB.Items.Add("Gennemsnit pr. uge: " + $"{antalTimer / ugeCounter:F2}" + " timer");
                     }
                 }
-            }
-            
+            }            
         }
 
         private void SOpdaterBtn_Click(object sender, RoutedEventArgs e)
@@ -216,10 +198,7 @@ namespace Eksamen_Katrine
                     SagOversigtTB.Items.Remove(selectedSag);
                     SagOversigtTB.Items.Add(sag);
 
-                    OverskriftTB.Clear();
-                    BeskrivelseTB.Clear();
-
-                    SAfdelingDD.SelectedItem = null;
+                    ClearSagFelter();
                 }
             }
 
@@ -242,16 +221,27 @@ namespace Eksamen_Katrine
                         MedarbejderOversigtLB.Items.Remove(selectedMedarbejder);
                         MedarbejderOversigtLB.Items.Add(medarbejder);
 
-                        InitialerTB.Clear();
-                        CprTB.Clear();
-                        NavnTB.Clear();
-
-                        AfdelingDD.SelectedItem = null;
-                        TidsOversigtLB.Items.Clear();
-                        FilterCB.SelectedItem = null;
+                        ClearMedarbejderFelter();
                     }
                 }
             }
+        }
+        private void ClearMedarbejderFelter()
+        {
+            InitialerTB.Clear();
+            CprTB.Clear();
+            NavnTB.Clear();
+
+            AfdelingDD.SelectedItem = null;
+            TidsOversigtLB.Items.Clear();
+            FilterCB.SelectedItem = null;
+        }
+        private void ClearSagFelter()
+        {
+            OverskriftTB.Clear();
+            BeskrivelseTB.Clear();
+
+            SAfdelingDD.SelectedItem = null;
         }
     }
 }

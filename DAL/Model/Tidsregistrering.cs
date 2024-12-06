@@ -19,13 +19,12 @@ namespace DAL.Model
         public int SagsNummer { get; set; }
         public Sag Sag { get; set; }
         public Tidsregistrering() { }
-        public Tidsregistrering(int id, DateTime start, DateTime slut, Medarbejder medarbejder, Sag sag)
+        public Tidsregistrering(DateTime start, DateTime slut, string medarbejderInitial, int sagsNummer)
         {
-            Id = id;
             Start = start;
             Slut = slut;
-            Medarbejder = medarbejder;
-            Sag = sag;
+            MedarbejderInitial = medarbejderInitial;
+            SagsNummer = sagsNummer;
         }
     }
 }
