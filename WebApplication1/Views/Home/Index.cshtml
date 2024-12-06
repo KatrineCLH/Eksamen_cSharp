@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Vælg medarbejder";
+
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="medarbejderValg">
+    @using (Html.BeginForm("Register", "Home"))
+    {
+        @Html.Action("ShowMedarbejderDD")
+        <button type="submit">Næste</button>
+    }
+</div>
+

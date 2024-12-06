@@ -1,0 +1,41 @@
+﻿@model DTO.Model.Medarbejder
+@{
+    ViewBag.Title = "Register";
+}
+
+<h2>@ViewBag.Title</h2>
+<div class="tidsreg-form">
+    @using (Html.BeginForm("AddTidsregistrering", "Home"))
+    {
+        @Html.HiddenFor(m => m.Initial)
+        <h4>@Model.ToString()</h4>
+        <label>Sag</label>
+        <br />
+        @Html.Action("ShowSagDD", new {afdelingsNummer = Model.Afdeling.AfdelingsNummer})
+        <br />
+        <label>Start</label>
+        <br />
+        <input type="datetime-local" name="Start"/>
+        <br />
+        <label>Slut</label>
+        <br />
+        <input type="datetime-local" name="Slut"/>
+        <br />
+        <button type="submit">Registrer</button>
+        <br />
+        <label class="succesLabel">@ViewBag.Succes</label>
+    }
+</div>
+
+<style>
+    .tidsreg-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    button {
+        margin: 5px 0 0 0;
+    }
+</style>
+
