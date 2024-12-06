@@ -31,7 +31,7 @@ namespace DAL.Repositories
         }
 
         /// <summary>
-        /// En liste af alle sager i Databasen, der er tilknyttet en afdeling, 
+        /// Returnerer en liste af alle sager i Databasen, der er tilknyttet en afdeling, 
         /// som findes i Databasen, som DTO-objekter. Ellers tom liste.
         /// </summary>
         public static List<DTO.Model.Sag> GetAlleSager()
@@ -73,7 +73,7 @@ namespace DAL.Repositories
 
         /// <summary>
         /// Hvis der findes sager på den angivne afdeling, 
-        /// så returnes de som en liste af DTO-objekter. Ellers returnes null.
+        /// så returnes de som en liste af DTO-objekter. Ellers returneres null.
         /// </summary>
         public static List<DTO.Model.Sag> GetSagerForAfdeling(int afdelingsNummer)
         {

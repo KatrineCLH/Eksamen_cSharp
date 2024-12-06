@@ -36,8 +36,8 @@ namespace DAL.Repositories
 
         /// <summary>
         /// Hvis der findes korrekte tidsregistreringer for medarbejderen med de angivne initialer, 
-        /// så returneres en liste af dem som DTO-objekter 
-        /// ordnet stigende efter Start-dato. Ellers returneres en tom liste.
+        /// så returneres en liste af dem som DTO-objekter ordnet stigende efter Start-dato. 
+        /// Ellers returneres en tom liste.
         /// </summary>
         public static List<DTO.Model.Tidsregistrering> GetAlleTidsregistreringerForMedarbejder(string initialer)
         {
@@ -47,17 +47,14 @@ namespace DAL.Repositories
                 DTO.Model.Medarbejder dtoMedarbjeder = MedarbejderRepository.GetMedarbejder(initialer);
                 if (dtoMedarbjeder != null)
                 {
-                    List<Model.Tidsregistrering> dalTidsregistreringer = context.Tidsregistrerings.Where(t => t.MedarbejderInitial == initialer).OrderBy(x => x.Start).ToList();                   
-                    if (dalTidsregistreringer.Count > 0)
+                    List<Tidsregistrering> dalTidsregistreringer = context.Tidsregistrerings.Where(t => t.MedarbejderInitial == initialer).OrderBy(x => x.Start).ToList();
+                    foreach (Tidsregistrering tr in dalTidsregistreringer)
                     {
-                        foreach (Model.Tidsregistrering tr in dalTidsregistreringer)
+                        DTO.Model.Sag dtoSag = SagRepository.GetSag(tr.SagsNummer);
+                        if (dtoSag != null)
                         {
-                            DTO.Model.Sag dtoSag = SagRepository.GetSag(tr.SagsNummer);
-                            if (dtoSag != null)
-                            {
-                                DTO.Model.Tidsregistrering dtoTidsregistrering = TidsregistreringMapper.MapToDTO(tr, dtoMedarbjeder, dtoSag);
-                                dtoTidsregistreringer.Add(dtoTidsregistrering);
-                            }
+                            DTO.Model.Tidsregistrering dtoTidsregistrering = TidsregistreringMapper.MapToDTO(tr, dtoMedarbjeder, dtoSag);
+                            dtoTidsregistreringer.Add(dtoTidsregistrering);
                         }
                     }
                 }

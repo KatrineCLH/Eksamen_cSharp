@@ -206,7 +206,8 @@ namespace Eksamen_Katrine
 
         private void OpdaterBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (MedarbejderOversigtLB.SelectedItem != null) {
+            if (MedarbejderOversigtLB.SelectedItem != null) 
+            {
                 Medarbejder selectedMedarbejder = (Medarbejder)MedarbejderOversigtLB.SelectedItem;
                 if (selectedMedarbejder.Initial == InitialerTB.Text)
                 {
