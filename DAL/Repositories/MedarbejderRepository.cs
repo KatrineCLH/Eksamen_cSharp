@@ -18,9 +18,9 @@ namespace DAL.Repositories
             {
                 if (context.Medarbejders.Find(medarbejder.Initial) == null)
                 {
-                    Model.Afdeling dalAfdeling = context.Afdelings.Find(medarbejder.Afdeling.AfdelingsNummer);
+                    //Model.Afdeling dalAfdeling = context.Afdelings.Find(medarbejder.Afdeling.AfdelingsNummer);
                     Model.Medarbejder dalMedarbejder = MedarbejderMapper.MapToDAL(medarbejder);
-                    dalMedarbejder.Afdeling = dalAfdeling;
+                    dalMedarbejder.AfdelingsNummer = medarbejder.Afdeling.AfdelingsNummer;
                     context.Medarbejders.Add(dalMedarbejder);
                     context.SaveChanges();
                     return medarbejder.Initial;
@@ -50,14 +50,14 @@ namespace DAL.Repositories
             {
                 Model.Medarbejder dalMedarbejder = context.Medarbejders.Find(medarbejder.Initial);
                 Model.Afdeling dalAfdeling = context.Afdelings.Find(dalMedarbejder.AfdelingsNummer);
-                dalMedarbejder.Afdeling = dalAfdeling;
+                dalMedarbejder.AfdelingsNummer = medarbejder.Afdeling.AfdelingsNummer;
 
                 dalMedarbejder.Navn = medarbejder.Navn;
                 dalMedarbejder.Cpr = medarbejder.Cpr;
                 if (dalAfdeling.AfdelingsNummer != medarbejder.Afdeling.AfdelingsNummer)
                 {
-                    Model.Afdeling nyAfdeling = context.Afdelings.Find(medarbejder.Afdeling.AfdelingsNummer);
-                    dalMedarbejder.Afdeling = nyAfdeling;
+                    //Model.Afdeling nyAfdeling = context.Afdelings.Find(medarbejder.Afdeling.AfdelingsNummer);
+                    dalMedarbejder.AfdelingsNummer = medarbejder.Afdeling.AfdelingsNummer;
                 }
 
 

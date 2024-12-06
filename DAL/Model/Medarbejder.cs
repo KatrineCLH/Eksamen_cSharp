@@ -14,16 +14,15 @@ namespace DAL.Model
         public string Initial {  get; set; }
         public string Cpr { get; set; }
         public string Navn { get; set; }
-        [ForeignKey("Afdeling")]
-        public int AfdelingsNummer {  get; set; }
-        public Afdeling Afdeling { get; set; }
+        [ForeignKey("AfdelingsNummer")]
+        public int AfdelingsNummer { get; set; }
         public Medarbejder() { }
-        public Medarbejder(string initial, string cpr, string navn, Afdeling afdeling)
+        public Medarbejder(string initial, string cpr, string navn, int afdelingsNummer)
         {
             Initial = initial;
             Cpr = cpr;
             Navn = navn;
-            Afdeling = afdeling;
+            AfdelingsNummer = afdelingsNummer;
         }
     }
 }

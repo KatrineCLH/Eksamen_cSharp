@@ -11,19 +11,18 @@ namespace DAL.Model
     public class Sag
     {
         [Key]
-        public int Nummer {  get; set; }
+        public int SagsNummer {  get; set; }
         public string Overskrift { get; set; }
         public string Beskrivelse { get; set; }
-        [ForeignKey("Afdeling")]
+        [ForeignKey("AfdelingsNummer")]
         public int AfdelingsNummer { get; set; }
-        public Afdeling Afdeling { get; set; }
         public Sag() { }
-        public Sag(int nummer, string overskrift, string beskrivelse, Afdeling afdeling)
+        public Sag(int nummer, string overskrift, string beskrivelse, int afdelingsNummer)
         {
-            Nummer = nummer;
+            SagsNummer = nummer;
             Overskrift = overskrift;
             Beskrivelse = beskrivelse;
-            Afdeling = afdeling;
+            AfdelingsNummer = afdelingsNummer;
         }
     }
 }

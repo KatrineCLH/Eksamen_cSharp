@@ -13,8 +13,8 @@ namespace DAL.Mappers
         {
             if (medarbejder != null)
             {
-                Model.Afdeling dalAfdeling = AfdelingMapper.MapToDAL(medarbejder.Afdeling);
-                Model.Medarbejder dalMedarbejder = new Model.Medarbejder(medarbejder.Initial, medarbejder.Cpr, medarbejder.Navn, dalAfdeling);
+                //Model.Afdeling dalAfdeling = AfdelingMapper.MapToDAL(medarbejder.Afdeling);
+                Model.Medarbejder dalMedarbejder = new Model.Medarbejder(medarbejder.Initial, medarbejder.Cpr, medarbejder.Navn, medarbejder.Afdeling.AfdelingsNummer);
                 return dalMedarbejder;
             }
             return null;

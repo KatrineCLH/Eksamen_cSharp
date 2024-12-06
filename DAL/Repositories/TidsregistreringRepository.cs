@@ -16,11 +16,11 @@ namespace DAL.Repositories
         {
             using (FirmaContext context = new FirmaContext())
             {
-                Medarbejder dalMedarbejder = context.Medarbejders.Find(t.Medarbejder.Initial);
-                Sag dalSag = context.Sags.Find(t.Sag.Nummer);
+                //Medarbejder dalMedarbejder = context.Medarbejders.Find(t.Medarbejder.Initial);
+                //Sag dalSag = context.Sags.Find(t.Sag.Nummer);
                 Tidsregistrering dalTidsregistrering = TidsregistreringMapper.MapToDAL(t);
-                dalTidsregistrering.Medarbejder = dalMedarbejder;
-                dalTidsregistrering.Sag = dalSag;
+                dalTidsregistrering.Initial = t.Medarbejder.Initial;
+                dalTidsregistrering.SagsNummer = t.Sag.Nummer;
                 context.Tidsregistrerings.Add(dalTidsregistrering);
                 context.SaveChanges();
                 return dalTidsregistrering.Id;
@@ -31,17 +31,10 @@ namespace DAL.Repositories
             using (FirmaContext context = new FirmaContext())
             {   
                 //hiv alle medarbejderens tider op fra db
-                List<Model.Tidsregistrering> dalTidsregistreringer = context.Tidsregistrerings.Where(t => t.MedarbejderInitial == initialer).OrderBy(x => x.Start).ToList();
+                List<Model.Tidsregistrering> dalTidsregistreringer = context.Tidsregistrerings.Where(t => t.Initial == initialer).OrderBy(x => x.Start).ToList();
                 //find den rigtige medarbejder
                 Model.Medarbejder dalMedarbejder = context.Medarbejders.Find(initialer);
-                //knyt alle de rigtige sager og den rigtige medarbejder på
-                foreach (Model.Tidsregistrering t in dalTidsregistreringer)
-                {
-                    Model.Sag dalSag = context.Sags.Find(t.SagsNummer);
-                    t.Sag = dalSag;
-                    t.Medarbejder = dalMedarbejder;
-                }
-                
+                //mapperen laver om til dto og tilføjer medarbejder og sag
                 List<DTO.Model.Tidsregistrering> dtoTidsregistreringer = TidsregistreringMapper.MapListToDTO(dalTidsregistreringer);
 
                 return dtoTidsregistreringer;

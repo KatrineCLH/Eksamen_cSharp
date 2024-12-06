@@ -16,12 +16,12 @@ namespace DAL.Repositories
             {
                 if (context.Sags.Find(sag.Nummer) == null)
                 {
-                    Model.Afdeling dalAfdeling = context.Afdelings.Find(sag.Afdeling.AfdelingsNummer);
+                    //Model.Afdeling dalAfdeling = context.Afdelings.Find(sag.Afdeling.AfdelingsNummer);
                     Model.Sag dalSag = SagMapper.MapToDAL(sag);
-                    dalSag.Afdeling = dalAfdeling;
+                    dalSag.AfdelingsNummer = sag.Afdeling.AfdelingsNummer;
                     context.Sags.Add(dalSag);
                     context.SaveChanges();
-                    return context.Sags.OrderByDescending(s => s.Nummer).First().Nummer;
+                    return context.Sags.OrderByDescending(s => s.SagsNummer).First().SagsNummer;
                 }
                 return -1;
             }
@@ -62,15 +62,15 @@ namespace DAL.Repositories
             using (FirmaContext context = new FirmaContext())
             {
                 Model.Sag dalSag = context.Sags.Find(sag.Nummer);
-                Model.Afdeling dalAfdeling = context.Afdelings.Find(dalSag.AfdelingsNummer);
-                dalSag.Afdeling = dalAfdeling;
+                //Model.Afdeling dalAfdeling = context.Afdelings.Find(dalSag.AfdelingsNummer);
+                dalSag.AfdelingsNummer = sag.Afdeling.AfdelingsNummer;
 
                 dalSag.Overskrift = sag.Overskrift;
                 dalSag.Beskrivelse = sag.Beskrivelse;
                 if (dalSag.AfdelingsNummer != sag.Afdeling.AfdelingsNummer)
                 {
                     Model.Afdeling nyAfdeling = context.Afdelings.Find(sag.Afdeling.AfdelingsNummer);
-                    dalSag.Afdeling = nyAfdeling;
+                    dalSag.AfdelingsNummer = sag.Afdeling.AfdelingsNummer;
                 }
 
                 context.SaveChanges();

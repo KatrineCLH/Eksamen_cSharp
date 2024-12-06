@@ -12,20 +12,18 @@ namespace DAL.Model
         public int Id { get; set; }
         public DateTime Start {  get; set; }
         public DateTime Slut { get; set; }
-        [ForeignKey("Medarbejder")]
-        public string MedarbejderInitial { get; set; }
-        public Medarbejder Medarbejder { get; set; }
-        [ForeignKey("Sag")]
+        [ForeignKey("Initial")]
+        public string Initial { get; set; }
+        [ForeignKey("Nummer")]
         public int SagsNummer { get; set; }
-        public Sag Sag { get; set; }
         public Tidsregistrering() { }
-        public Tidsregistrering(int id, DateTime start, DateTime slut, Medarbejder medarbejder, Sag sag)
+        public Tidsregistrering(int id, DateTime start, DateTime slut, string initial, int nummer)
         {
             Id = id;
             Start = start;
             Slut = slut;
-            Medarbejder = medarbejder;
-            Sag = sag;
+            Initial = initial;
+            SagsNummer = nummer;
         }
     }
 }

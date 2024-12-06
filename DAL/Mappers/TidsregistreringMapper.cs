@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DAL.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,9 @@ namespace DAL.Mappers
     {
         public static Model.Tidsregistrering MapToDAL(DTO.Model.Tidsregistrering t)
         {
-            Model.Medarbejder dalMedarbejder = MedarbejderMapper.MapToDAL(t.Medarbejder);
-            Model.Sag dalSag = SagMapper.MapToDAL(t.Sag);
-            return new Model.Tidsregistrering(t.Id, t.Start, t.Slut, dalMedarbejder, dalSag);
+            //Model.Medarbejder dalMedarbejder = MedarbejderMapper.MapToDAL(t.Medarbejder);
+            //Model.Sag dalSag = SagMapper.MapToDAL(t.Sag);
+            return new Model.Tidsregistrering(t.Id, t.Start, t.Slut, t.Medarbejder.Initial, t.Sag.Nummer);
         }
         public static List<DTO.Model.Tidsregistrering> MapListToDTO(List<Model.Tidsregistrering> tidsregistreringer)
         {
@@ -28,8 +29,8 @@ namespace DAL.Mappers
         }
         public static DTO.Model.Tidsregistrering MapToDTO(Model.Tidsregistrering t)
         {
-            DTO.Model.Medarbejder dtoMedarbejder = MedarbejderMapper.MapToDTO(t.Medarbejder);
-            DTO.Model.Sag dtoSag = SagMapper.MapToDTO(t.Sag);
+            DTO.Model.Medarbejder dtoMedarbejder = MedarbejderRepository.GetMedarbejder(t.Initial);
+            DTO.Model.Sag dtoSag = SagRepository.GetSag(t.SagsNummer);
             return new DTO.Model.Tidsregistrering(t.Id, t.Start, t.Slut, dtoMedarbejder, dtoSag);
         }
     }

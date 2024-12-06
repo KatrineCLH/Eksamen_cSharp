@@ -13,8 +13,8 @@ namespace DAL.Mappers
         {
             if (sag != null)
             {
-                Model.Afdeling dalAfdeling = AfdelingMapper.MapToDAL(sag.Afdeling);
-                Model.Sag dalSag = new Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, dalAfdeling);
+                //Model.Afdeling dalAfdeling = AfdelingMapper.MapToDAL(sag.Afdeling);
+                Model.Sag dalSag = new Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, sag.Afdeling.AfdelingsNummer);
                 return dalSag;
             }
             return null;
@@ -24,7 +24,7 @@ namespace DAL.Mappers
             if (sag != null)
             {
                 DTO.Model.Afdeling dtoAfdeling = AfdelingMapper.MapToDTO(AfdelingRepository.GetAfdeling(sag.AfdelingsNummer));
-                DTO.Model.Sag dtoSag = new DTO.Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, dtoAfdeling);
+                DTO.Model.Sag dtoSag = new DTO.Model.Sag(sag.SagsNummer, sag.Overskrift, sag.Beskrivelse, dtoAfdeling);
                 return dtoSag;
             }
             return null;
