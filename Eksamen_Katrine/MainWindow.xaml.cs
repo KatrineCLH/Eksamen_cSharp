@@ -107,7 +107,7 @@ namespace Eksamen_Katrine
 
                 TidsOversigtLB.Items.Clear();
 
-                List<Tidsregistrering> tr = tidsregistreringBLL.GetAlleTidsregistreringerForID(selectedMedarbejder.Initial);
+                List<Tidsregistrering> tr = tidsregistreringBLL.GetAlleTidsregistreringerForMedarbejder(selectedMedarbejder.Initial);
                 foreach (Tidsregistrering t in tr)
                 {
                     TidsOversigtLB.Items.Add(t.ToString());
@@ -133,7 +133,7 @@ namespace Eksamen_Katrine
                 TidsOversigtLB.Items.Clear();
 
                 Medarbejder selectedMedarbejder = (Medarbejder)MedarbejderOversigtLB.SelectedItem;
-                List<Tidsregistrering> tr = tidsregistreringBLL.GetAlleTidsregistreringerForID(selectedMedarbejder.Initial);
+                List<Tidsregistrering> tr = tidsregistreringBLL.GetAlleTidsregistreringerForMedarbejder(selectedMedarbejder.Initial);
 
                 if (tr.Count > 0)
                 {

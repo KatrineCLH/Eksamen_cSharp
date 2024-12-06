@@ -24,7 +24,7 @@ namespace BLL.BLL
         /// Hvis der findes korrekte tidsregistreringer for en medarbejder med de angivne initialer, 
         /// så returneres de som en liste af DTO-objekter ordnet stigende efter Start-dato. Ellers returneres en tom liste
         /// </summary>
-        public List<Tidsregistrering> GetAlleTidsregistreringerForID(string intitialer)
+        public List<Tidsregistrering> GetAlleTidsregistreringerForMedarbejder(string intitialer)
         {
             return TidsregistreringRepository.GetAlleTidsregistreringerForMedarbejder(intitialer);
         }
