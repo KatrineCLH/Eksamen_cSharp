@@ -1,4 +1,5 @@
 ﻿using DAL.Repositories;
+using DAL.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace DAL.Mappers
         /// Sag må ikke være null.
         /// Returnerer den angivne DTO-sag som DAL-sag.
         /// </summary>
-        public static Model.Sag MapToDAL(DTO.Model.Sag sag)
+        public static Sag MapToDAL(DTO.Model.Sag sag)
         {
-            Model.Sag dalSag = new Model.Sag(sag.Overskrift, sag.Beskrivelse, sag.Afdeling.AfdelingsNummer);
+            Sag dalSag = new Sag(sag.Overskrift, sag.Beskrivelse, sag.Afdeling.AfdelingsNummer);
             return dalSag;
         }
 
@@ -23,7 +24,7 @@ namespace DAL.Mappers
         /// Sag må ikke være null. Afdeling må ikke være null og skal være korrekt.
         /// Den angivne sag returneres som DTO-objekt.
         /// </summary>
-        public static DTO.Model.Sag MapToDTO(Model.Sag sag, Model.Afdeling afdeling)
+        public static DTO.Model.Sag MapToDTO(Sag sag, Afdeling afdeling)
         {
             DTO.Model.Afdeling dtoAfdeling = AfdelingMapper.MapToDTO(afdeling);
             DTO.Model.Sag dtoSag = new DTO.Model.Sag(sag.Nummer, sag.Overskrift, sag.Beskrivelse, dtoAfdeling);
@@ -36,10 +37,10 @@ namespace DAL.Mappers
         /// Afdeling må ikke være null og skal være korrekt.
         /// Returnerer alle sagerne som en liste af DTO-sager.
         /// </summary>
-        public static List<DTO.Model.Sag> MapToDTOList(List<Model.Sag> sager, Model.Afdeling afdeling)
+        public static List<DTO.Model.Sag> MapToDTOList(List<Sag> sager, Afdeling afdeling)
         {
             List<DTO.Model.Sag> dtoSager = new List<DTO.Model.Sag>();
-            foreach (Model.Sag s in sager)
+            foreach (Sag s in sager)
             {
                 DTO.Model.Sag dtoSag = MapToDTO(s, afdeling);
                 dtoSager.Add(dtoSag);

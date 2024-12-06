@@ -1,5 +1,6 @@
 ﻿using DAL.Context;
 using DAL.Mappers;
+using DAL.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,11 @@ namespace DAL.Repositories
         /// <summary>
         /// Hvis der findes en afdeling i Databasen med det angivne nummer, returneres den som DAL-objekt. Ellers returneres null.
         /// </summary>
-        public static Model.Afdeling GetAfdeling(int afdelingsNummer)
+        public static Afdeling GetAfdeling(int afdelingsNummer)
         {
             using (FirmaContext context = new FirmaContext())
             {
-                Model.Afdeling afdeling = context.Afdelings.Find(afdelingsNummer);
+                Afdeling afdeling = context.Afdelings.Find(afdelingsNummer);
                 if (afdeling != null) 
                 {
                     return afdeling;
@@ -33,7 +34,7 @@ namespace DAL.Repositories
         {
             using (FirmaContext context = new FirmaContext())
             {
-                List<Model.Afdeling> dalAfdelinger = context.Afdelings.ToList();
+                List<Afdeling> dalAfdelinger = context.Afdelings.ToList();
                 if (dalAfdelinger.Count > 0)
                 {
                     List<DTO.Model.Afdeling> dtoAfdelinger = AfdelingMapper.MapListToDTO(dalAfdelinger);
